@@ -138,5 +138,5 @@ let replyService = (function(){
 
 
 /* 즉시 실행함수는() 안에 함수 선언하고 바깥쪽에서 실행. 
-replyService라는 벼누에 name이라는 속성에 "컴미"라는 속성값을 가진 객체가 할당
+replyService라는 변수에 name이라는 속성에 "컴미"라는 속성값을 가진 객체가 할당
 */

@@ -51,12 +51,15 @@ div.board.list .btn_wrap button
 }
 
 
+div.board.list .reply-count{	background-color: #e690dc; color:#fff; border-radius:3px; padding:2px 6px;font-size: 0.9rem;}
 div.board.list:after{display:block; content:""; clear:both;}
 
 ul.pagination{justify-content: center; align-items: center;display: flex; 
 width: 100%; margin: auto; gap:7px;}
 ul.pagination li.active{background-color:#e690dc;padding: 0 4px;border-radius: 3px;}
 ul.pagination li.active a{color:#fff;}
+
+
 
 .reply{width:100%; margin:20px auto 0 auto;}
 .reply h1{padding:15px 0; border-top:1px solid #ededed; border-bottom:1px solid #ededed;display: flex;
