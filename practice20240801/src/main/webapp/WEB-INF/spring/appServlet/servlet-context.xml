@@ -25,19 +25,24 @@
 	
 
 	
+<!-- 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<beans:property name="defaultEncoding" value="utf-8"></beans:property>
 		
-		<!-- 1024 * 1024 * 2bytes 10MB -->
+		1024 * 1024 * 2bytes 10MB
 		<beans:property name="maxUploadSize" value="104857560"></beans:property>
-		<!-- 1024 * 1024 * 2bytes 2MB -->
+		1024 * 1024 * 2bytes 2MB
 		<beans:property name="maxUploadSizePerFile" value="2097152"></beans:property>
 		<beans:property name="uploadTempDir" value="file:\c:\workspace\spring\upload"></beans:property>
 		<beans:property name="maxInMemorySize" value="10485756"></beans:property>
-	</beans:bean>
+	</beans:bean> 
+-->
 	
 	<context:component-scan base-package="org.zerock.controller" />
 	<context:component-scan base-package="org.zerock.exception" /> <!-- component-scan: 해당 패키지의 내용을 조사 -->	
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
 		
+	</beans:bean>	
 		
 </beans:beans>
