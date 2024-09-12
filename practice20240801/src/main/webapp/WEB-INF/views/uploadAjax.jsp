@@ -8,6 +8,7 @@
 <meta name="viewport"  content="width=device-width, initial-scale=1.0"/>
 <meta charset="UTF-8" />
 <title>업로드 AJAX</title>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" />
 </head>
 <body>
 
@@ -15,6 +16,8 @@
 <div class="uploadDiv">
 	<input type="file" name="uploadFile" multiple />
 </div>
+	
+<div class="uploadResult"><ul></ul></div>
 	
 <button id="uploadBtn">UPLOAD</button>
 	
@@ -26,6 +29,22 @@
 
 <script>
 $(document).ready(function(){
+	let uploadResult = $(".uploadResult ul");
+	function showUploadedFile(uploadResultArr) {
+		let str = "";
+		$(uploadResultArr).each(function(i, obj){
+			if(!obj.image) {
+				str +="<li><img src='/resources/img/clip-icon.png' alt='첨부파일' />" + obj.fileName + "</li>";
+			} else {
+				// str += "<li>" + obj.fileName + "</li>";
+				let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+				str += "<li><img src='/display?fileName=" + fileCallPath + "'></li>";
+			}
+
+		}); 
+		uploadResult.append(str);
+	} // showUploadedFile 닫음
+
 	let regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 	let maxSize = 5242880; // 5MB
 
@@ -41,6 +60,8 @@ $(document).ready(function(){
 		}
 		return true;
 	} // checkExtension 닫음
+
+	let cloneObj = $(".uploadDiv").clone();
 
 	$("#uploadBtn").on("click", function(e){
 		let formData = new FormData(); /* 202409011 정리:FormData객체는 가상의 <form>태그와 같다고 생각하면 됨. Ajax를 이용하는 파일 업로드는 FormData를 이용해서 필요한 파라미터를 담아서 전송하는 방식(FormData객체는 브라우저의 제약이 있으므로 주의) */
@@ -65,6 +86,8 @@ $(document).ready(function(){
 			dataType : "json",
 			success : function(result){
 				console.log(result);
+				showUploadedFile(result);
+				$(".uploadDiv").html(cloneObj.html());
 			}
 		}); // $.ajax
 	}); 

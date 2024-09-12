@@ -3,22 +3,30 @@ package org.zerock.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
+
 import org.zerock.domain.AttachFileDTO;
 
 import lombok.extern.log4j.Log4j;
@@ -27,6 +35,64 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Controller
 @Log4j
 public class UploadController {
+	
+	/* 파일 다운로드 */
+	@GetMapping(value = "/download", produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent, String fileName) {
+		log.info("다운로드 파일(download file): " + fileName);
+		Resource resource = new FileSystemResource("C:\\zzz\\upload\\" + fileName);
+		if(resource.exists() == false) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		log.info("리소스(resource): " + resource);
+		
+		String resourceName = resource.getFilename();
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		try {
+			String downloadName = null;
+			
+			if(userAgent.contains("Trident")) {
+				log.info("IE 브라우저(IE browser)");
+				downloadName = URLEncoder.encode(resourceName, "UTF-8").replaceAll("\\", " ");
+			} else if(userAgent.contains("Edge")) {
+				log.info("엣지 브라우저(Edge browser)");
+				downloadName = URLEncoder.encode(resourceName, "UTF-8");
+				log.info("엣지 이름(Edge name): " + downloadName);
+			} else {
+				log.info("크롬 브라우저(Chrome browser)");
+				downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
+			} // if else 닫음
+			
+			headers.add("Content-Disposition", "attachment; filename=" + downloadName);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	} // downloadFile 닫음
+	
+	/* 섬네일 데이터 전송 */
+	@GetMapping("/display")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName) { /* getFile은 문자열로 파일의 경로가 포함된 fileName을 파라미터로 받고 byte[]를 전송함 */
+		log.info("파일이름(fileName): " + fileName);
+		File file = new File("C:\\zzz\\upload\\" + fileName);
+		log.info("파일(file): " + file);
+		
+		ResponseEntity<byte[]> result = null;
+		
+		try {
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	} // getFile 닫음
 	
 	/* 이미지 파일 여부 체크 */
 	private boolean checkImageType(File file) {
@@ -111,55 +177,6 @@ public class UploadController {
 		return new ResponseEntity<>(list, HttpStatus.OK);		
 	} // uploadAjaxPost닫음
 		
-/*		
-	@PostMapping("/uploadAjaxAction")
-	public void uploadAjaxPost(MultipartFile[] uploadFile) {
-		log.info("업데이트 AJAX 포스트(update ajax post)....");
-		
-		String uploadFolder = "C:\\zzz\\upload";
-		
-		// make folder --------------------
-		File uploadPath = new File(uploadFolder, getFolder());
-		log.info("업로드 패스(upload path): " + uploadPath);
-		
-		if(uploadPath.exists() == false) {
-			uploadPath.mkdirs();
-		} // make yyyy/MM/dd folder
-		
-		for (MultipartFile multipartFile : uploadFile) {
-			log.info("--------------------------");
-			log.info("업로드 파일 이름(upload file name): " + multipartFile.getOriginalFilename());
-			log.info("업로드 파일 사이즈(upload file size): " + multipartFile.getSize());
-			
-			String uploadFileName = multipartFile.getOriginalFilename();
-			
-			// IE has file path
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-			log.info("파일 이름만(only file name): " + uploadFileName);
-			
-			// 파일 이름에 uuid 붙임 
-			UUID uuid = UUID.randomUUID();
-			uploadFileName = uuid.toString() + "_" + uploadFileName;
-			
-			try {
-				File saveFile = new File(uploadPath, uploadFileName); // try catch문 위에 있던 saveFIle을 try안으로 넣음
-				multipartFile.transferTo(saveFile);
-				
-				// check imagr type file
-				if(checkImageType(saveFile)) {
-					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
-					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
-					thumbnail.close();
-				} // if문 닫음
-				
-			} catch(Exception e){
-				log.error(e.getMessage());
-			} // catch 닫음
-			
-		} // for 닫음
-				
-	} // uploadAjaxPost닫음
-*/	
 	@GetMapping("/uploadAjax")
 	public void uploadAjax () {
 		log.info("업로드 AJAX페이지(upload ajax)");
