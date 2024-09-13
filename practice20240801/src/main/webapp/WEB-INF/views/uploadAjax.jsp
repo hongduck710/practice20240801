@@ -20,15 +20,28 @@
 <div class="uploadResult"><ul></ul></div>
 	
 <button id="uploadBtn">UPLOAD</button>
+
+<div class="bigPictureWrapper">
+	<div class="bigPicture"></div>
+</div>
 	
-<!--<script src="https://code.jquery.com/jquery-3.7.1.min.js"  type="text/javascript"></script>--><!--  20240911: header.jspf에 있는 제이쿼리 CDN을 첨부하였더니 ajax is not a function오류 사라짐, slim버전이 아닌 CDM을 사용하였더니 ajax is not a function오류 사라짐-->
+<!--  20240911: header.jspf에 있는 제이쿼리 CDN을 첨부하였더니 ajax is not a function오류 사라짐, slim버전이 아닌 CDM을 사용하였더니 ajax is not a function오류 사라짐-->
 <script
 	src="https://code.jquery.com/jquery-3.7.1.min.js"
 	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-	crossorigin="anonymous"></script><!-- 20240911: integrity, crossoorigin 지우지 않으면 image파일 여부 true, false에 영향이 있는지 없는 지 확인하기 위해 지우지 않고 제이쿼리 첨부함 -->
+	crossorigin="anonymous">
+</script><!-- 20240911: integrity, crossoorigin 지우지 않으면 image파일 여부 true, false에 영향이 있는지 없는 지 확인하기 위해 지우지 않고 제이쿼리 첨부함 -->
 
 <script>
+function showImage(fileCallPath){
+	// alert(fileCallPath);
+	$(".bigPictureWrapper").css("display", "flex").show();
+	$(".bigPicture").html("<img src='/display?fileName=" + encodeURI(fileCallPath) +"' />")
+	.animate({width:"100%", height:"100%"},500);
+
+} // showImage 닫음	
 $(document).ready(function(){
+
 	let uploadResult = $(".uploadResult ul");
 	function showUploadedFile(uploadResultArr) {
 		let str = "";
@@ -40,7 +53,9 @@ $(document).ready(function(){
 			} else {
 				// str += "<li>" + obj.fileName + "</li>";
 				let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
-				str += "<li><img src='/display?fileName=" + fileCallPath + "'></li>";
+				let originPath = obj.uploadPath + "\\" + obj.uuid + "_" + obj.fileName;
+				originPath = originPath.replace(new RegExp(/\\/g),"/");
+				str += "<li><a href=\"javascript:showImage(\'"+ originPath +"\')\"><img src='/display?fileName=" + fileCallPath + "'></a></li>";
 			}
 		}); 
 		uploadResult.append(str);
@@ -91,7 +106,14 @@ $(document).ready(function(){
 				$(".uploadDiv").html(cloneObj.html());
 			}
 		}); // $.ajax
-	}); 
+	}); // #uploadBtn 닫음
+
+	$(".bigPictureWrapper").on("click", function(e){
+		$(".bigPicture").animate({width:"0", height:"0"},500);
+		//setTimeout(() => {
+			$(this).hide(); // = $(".bigPictureWrapper").hide();
+		//}, 500);
+	}); // .bigPictureWrapper 닫음
 });
 
 </script>
