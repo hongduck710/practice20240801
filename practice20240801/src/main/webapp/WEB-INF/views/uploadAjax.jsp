@@ -47,15 +47,21 @@ $(document).ready(function(){
 		let str = "";
 		$(uploadResultArr).each(function(i, obj){
 			if(!obj.image) {
-
 				let fileCallPath = encodeURIComponent( obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
-				str +="<li><a href='/download?fileName="+ fileCallPath +"'><img src='/resources/img/clip-icon.png' alt='📎' />" + obj.fileName + "</a></li>";
+				let fileLink = fileCallPath.replace(new RegExp(/\\/g),"/"); // g플래그: 문자열 내의 "\\" → "/"로 바꿈 
+				str +="<li><div><a href='/download?fileName="+ fileCallPath +"'>" + 
+					"<img src='/resources/img/clip-icon.png' width='25' alt='📎' />" + obj.fileName + "</a>" + 
+					"<span data-file=\'" + fileCallPath + "\' data-type='file'>X</span>" +
+					"</div></li>";
 			} else {
 				// str += "<li>" + obj.fileName + "</li>";
 				let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
 				let originPath = obj.uploadPath + "\\" + obj.uuid + "_" + obj.fileName;
-				originPath = originPath.replace(new RegExp(/\\/g),"/");
-				str += "<li><a href=\"javascript:showImage(\'"+ originPath +"\')\"><img src='/display?fileName=" + fileCallPath + "'></a></li>";
+				originPath = originPath.replace(new RegExp(/\\/g),"/"); 
+				str += "<li><a href=\"javascript:showImage(\'"+ originPath +"\')\">" + 
+					"<img src='/display?fileName=" + fileCallPath + "'></a>" + 
+					"<span data-file=\'" + fileCallPath + "\' data-type='image'>X</span>" +
+					"</li>";
 			}
 		}); 
 		uploadResult.append(str);
@@ -110,10 +116,32 @@ $(document).ready(function(){
 
 	$(".bigPictureWrapper").on("click", function(e){
 		$(".bigPicture").animate({width:"0", height:"0"},500);
-		//setTimeout(() => {
-			$(this).hide(); // = $(".bigPictureWrapper").hide();
-		//}, 500);
+		setTimeout(function(){
+			$(".bigPictureWrapper").hide(); 
+		}, 10);
+		/*
+		setTimeout(() => {
+			$(this).hide();
+		}, 10);
+		*/
 	}); // .bigPictureWrapper 닫음
+
+	$(".uploadResult").on("click", "span", function(e){
+		let targetFile = $(this).data("file");
+		let type = $(this).data("type");
+		console.log(targetFile);
+
+		$.ajax({
+			url : "/deleteFile",
+			data : {fileName : targetFile, type : type},
+			dataType : "text",
+			type : "POST",
+			success : function (result) {
+				alert(result);
+			} 
+		}); // $.ajax 닫음
+	}); // .uploadResult 닫음
+
 });
 
 </script>
