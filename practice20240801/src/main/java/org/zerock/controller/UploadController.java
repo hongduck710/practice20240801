@@ -50,6 +50,9 @@ public class UploadController {
 		
 		String resourceName = resource.getFilename();
 		
+		// removeUUID
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_") + 1);
+		
 		HttpHeaders headers = new HttpHeaders();
 		
 		try {
@@ -57,16 +60,16 @@ public class UploadController {
 			
 			if(userAgent.contains("Trident")) {
 				log.info("IE 브라우저(IE browser)");
-				downloadName = URLEncoder.encode(resourceName, "UTF-8").replaceAll("\\", " ");
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8").replaceAll("\\", " ");
 			} else if(userAgent.contains("Edge")) {
 				log.info("엣지 브라우저(Edge browser)");
-				downloadName = URLEncoder.encode(resourceName, "UTF-8");
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8");
 				log.info("엣지 이름(Edge name): " + downloadName);
 			} else {
-				log.info("크롬 브라우저(Chrome browser)");
-				downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
+				log.info("크롬 브라우저(Chrome browser) 혹은 파이어폭스 그리고 그 외 브라우저(?)");
+				downloadName = new String(resourceOriginalName.getBytes("UTF-8"), "ISO-8859-1");
 			} // if else 닫음
-			
+			log.info("다운로드이름(downloadName): " + downloadName);
 			headers.add("Content-Disposition", "attachment; filename=" + downloadName);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

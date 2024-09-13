@@ -34,13 +34,14 @@ $(document).ready(function(){
 		let str = "";
 		$(uploadResultArr).each(function(i, obj){
 			if(!obj.image) {
-				str +="<li><img src='/resources/img/clip-icon.png' alt='첨부파일' />" + obj.fileName + "</li>";
+
+				let fileCallPath = encodeURIComponent( obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+				str +="<li><a href='/download?fileName="+ fileCallPath +"'><img src='/resources/img/clip-icon.png' alt='📎' />" + obj.fileName + "</a></li>";
 			} else {
 				// str += "<li>" + obj.fileName + "</li>";
 				let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
 				str += "<li><img src='/display?fileName=" + fileCallPath + "'></li>";
 			}
-
 		}); 
 		uploadResult.append(str);
 	} // showUploadedFile 닫음
