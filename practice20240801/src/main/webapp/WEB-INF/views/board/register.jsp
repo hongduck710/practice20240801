@@ -79,7 +79,7 @@ $(document).ready(function(e){
 				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' class=''><i class='fa fa-times'></i></button><br/>";
 				str += "<img src='/resources/img/clip-icon.png' alt='📎' /></a>";
 				str += "</div>";
-				str += "</li>"; 
+				str += "</li>";        
 				
 			}
 		}); //$(uploadResultArr) 닫음
