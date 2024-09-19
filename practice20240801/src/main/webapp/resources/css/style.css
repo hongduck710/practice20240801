@@ -2,24 +2,22 @@
 
 
 
-.wrap{max-width:1200px; width:100%; margin:auto;padding:20px 40px;}
+.wrap{max-width:1200px; width:100%; margin:auto; padding:20px 40px;}
 
 .youtube_responsive{position:relative; width:100%; height:0; padding-bottom:56.25%;}
 .youtube_responsive iframe{width:100%; height:100%; position:absolute; top:0; left:0;}
 
 header{box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);border-bottom:1px solid #eee; position:sticky; padding:20px; top:0; 
-background-color:#fff;display: flex; z-index:1;
-  align-items: center; justify-content: space-between;}
+background-color:#fff;display: flex; z-index:1; align-items: center; justify-content: space-between;}
   
-  nav a{margin:0 10px;}
+ nav a{margin:0 10px;}
   
-
 section.wrap .main_banner{width:100%; margin:auto;}
 
 section.wrap .main_banner img{ width:100%;}
 
 section h1{text-align:center;}
-table{border-collapse: collapse; margin:auto;width:100%;}
+table{border-collapse: collapse; margin:auto; width:100%;}
 table, th, td{border:1px solid #222;}
 th, td{padding:10px 20px;}
 
@@ -30,12 +28,10 @@ div.board input, div.board textarea{width:100%;}
 div.board label{margin-bottom:15px;display:block;}
 div.board textarea{     font-family: 'KHNPHU';}
 
-div.board .buttons:after{content:"";display:block; clear:both;}
+div.board .buttons:after{content:""; display:block; clear:both;}
 div.board .buttons button{padding:10px 20px;}
 div.board .buttons button[type="submit"]{ float:right;}
 div.board .buttons button[type="reset"]{ float:left;}
-
-
 
 div.board.list table{margin-bottom:15px;}
 div.board.list .btn_wrap{width:100%;margin-bottom:10px;text-align:right;}
@@ -50,7 +46,6 @@ div.board.list .btn_wrap button
 	border:none;
 }
 
-
 div.board.list .reply-count{	background-color: #e690dc; color:#fff; border-radius:3px; padding:2px 6px;font-size: 0.9rem;}
 div.board.list:after{display:block; content:""; clear:both;}
 
@@ -58,8 +53,6 @@ ul.pagination{justify-content: center; align-items: center;display: flex;
 width: 100%; margin: auto; gap:7px;}
 ul.pagination li.active{background-color:#e690dc;padding: 0 4px;border-radius: 3px;}
 ul.pagination li.active a{color:#fff;}
-
-
 
 .reply{width:100%; margin:20px auto 0 auto;}
 .reply h1{padding:15px 0; border-top:1px solid #ededed; border-bottom:1px solid #ededed;display: flex;
@@ -80,6 +73,8 @@ ul.pagination li.active a{color:#fff;}
 	list-style: none;
 	padding:10px;
 }
+.uploadResult ul li  a , .uploadResult ul li  span{vertical-align:middle; display:inline-block;}
+.uploadResult ul li  span {font-size: 2rem; font-weight:bold; cursor:pointer;}
 .uploadResult ul li img {
  	vertical-align: middle;
 	margin-right: 13px;
@@ -124,9 +119,6 @@ ul.pagination li.active a{color:#fff;}
 	display:block;
 	z-index:1;
 }
-
-
-
 
 @media (max-width:1200px) {
 	section.wrap{padding:20px;}

@@ -8,6 +8,7 @@
 <meta name="viewport"  content="width=device-width, initial-scale=1.0"/>
 <meta charset="UTF-8" />
 <title>업로드 AJAX</title>
+
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" />
 </head>
 <body>
@@ -51,7 +52,7 @@ $(document).ready(function(){
 				let fileLink = fileCallPath.replace(new RegExp(/\\/g),"/"); // g플래그: 문자열 내의 "\\" → "/"로 바꿈 
 				str +="<li><div><a href='/download?fileName="+ fileCallPath +"'>" + 
 					"<img src='/resources/img/clip-icon.png' width='25' alt='📎' />" + obj.fileName + "</a>" + 
-					"<span data-file=\'" + fileCallPath + "\' data-type='file'>X</span>" +
+					"<span data-file=\'" + fileCallPath + "\' data-type='file'>×</span>" +
 					"</div></li>";
 			} else {
 				// str += "<li>" + obj.fileName + "</li>";
@@ -60,7 +61,7 @@ $(document).ready(function(){
 				originPath = originPath.replace(new RegExp(/\\/g),"/"); 
 				str += "<li><a href=\"javascript:showImage(\'"+ originPath +"\')\">" + 
 					"<img src='/display?fileName=" + fileCallPath + "'></a>" + 
-					"<span data-file=\'" + fileCallPath + "\' data-type='image'>X</span>" +
+					"<span data-file=\'" + fileCallPath + "\' data-type='image'>×</span>" +
 					"</li>";
 			}
 		}); 
