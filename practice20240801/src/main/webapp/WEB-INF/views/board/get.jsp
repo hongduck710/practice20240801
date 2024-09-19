@@ -35,6 +35,8 @@
 				<input type="hidden" name="keyword" value="<c:out value='${cri.keyword}' />" />
 				<input type="hidden" name="type" value="<c:out value='${cri.type}' />" />
 			</form>
+
+			<div class="uploadResult"><ul></ul></div>
 			
 			<div class="reply">
 						<!-- 댓글 팝업 -->
@@ -77,9 +79,61 @@
 	</div>
 </div>
 
+<div class="bigPictureWrapper">
+	<div class="bigPicture"></div>
+</div>
 
+<script type="text/javascript">
+$(document).ready(function(){
 
+	let bno = '<c:out value="${board.bno}" />';
+	$.getJSON("/board/getAttachList", {bno: bno}, function(arr){
+		console.log(arr);
+		let str = "";
 
+		$(arr).each(function(i, attach){
+			//image type
+			if(attach.fileType){
+				let fileCallPath = encodeURIComponent( attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName );
+				str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "' ><div>";
+				str += "<img src='/display?fileName=" + fileCallPath + "' alt='첨부이미지' />";
+				str += "</div>";
+				str += "</li>";	
+			} else {
+				str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "'  ><div>";
+				str += "<span>" + attach.fileName + "</span><br/>";
+				str += "<img src='/resources/img/clip-icon.png' alt='📎'/>";
+				str += "</div>";
+				str += "</li>";	
+			}
+		}); // arr 닫음
+		$(".uploadResult ul").html(str);
+	}); // getJson 닫음
+	
+	$(".uploadResult").on("click", "li", function(e){
+		console.log("이미지 보기(view image)");
+		
+		let liObj = $(this);
+		let path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename") );
+		
+		if(liObj.data("type")) {
+			showImage(path.replace(RegExp(/\\/g), "/"));
+		} else {
+			//download
+			self.location = "/download?fileName=" + path;
+		}
+		
+	}); // .uploadResult li 클릭이벤트 닫음
+	
+	function showImage(fileCallPath) {
+		alert(fileCallPath);
+		$(".bigPictureWrapper").css("display", "flex").show();
+		$(".bigPicture").html("<img src='/display?fileName=" + fileCallPath + "' />")
+		.animate({width: '100%', height: '100%'}, 1000);
+	}
+	
+});
+</script>
 
 <script type="text/javascript">
 

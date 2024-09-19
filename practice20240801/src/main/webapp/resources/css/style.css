@@ -74,7 +74,7 @@ ul.pagination li.active a{color:#fff;}
 	padding:10px;
 }
 .uploadResult ul li  a , .uploadResult ul li  span{vertical-align:middle; display:inline-block;}
-.uploadResult ul li  span {font-size: 2rem; font-weight:bold; cursor:pointer;}
+.uploadResult ul li  span {font-size: 1rem; font-weight:bold; cursor:pointer;}
 .uploadResult ul li img {
  	vertical-align: middle;
 	margin-right: 13px;

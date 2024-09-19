@@ -1,5 +1,10 @@
 package org.zerock.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.PageDTO;
+import org.zerock.domain.BoardAttachVO;
 import org.zerock.service.BoardService;
+
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -68,9 +75,9 @@ public class BoardController {
 		
 		log.info("---------------------------------------");
 		
-		//service.register(board); /* ✨✨✨ 2024년 08월 07일: 요 것을 빼먹어서 글쓰기 기능 구현이 되지 않았음 ✨✨✨ */
+		service.register(board); /* ✨✨✨ 2024년 08월 07일: 요 것을 빼먹어서 글쓰기 기능 구현이 되지 않았음 ✨✨✨ */
 		
-		//rttr.addFlashAttribute("result", board.getBno());
+		rttr.addFlashAttribute("result", board.getBno());
 		
 		return "redirect:/board/list";		
 		/* 'redirect:' 접두어를 사용하면 스프링MVC가 내부적으로 response.sendRedirect()를 처리해줌 */
@@ -118,6 +125,11 @@ public class BoardController {
 		rttr.addAttribute("keyword", cri.getKeyword());
 		*/
 		return "redirect:/board/list" + cri.getListLink();
+	}
+	
+	@GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno){
+		return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
 	}
 	
 }

@@ -2,12 +2,16 @@ package org.zerock.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.mapper.BoardMapper;
+import org.zerock.mapper.BoardAttachMapper;
+import org.zerock.domain.BoardAttachVO;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
@@ -16,12 +20,32 @@ import lombok.extern.log4j.Log4j;
 public class BoardServiceImple implements BoardService{
 	
 	// spring 4.3 이상에서 자동 처리
+	@Setter(onMethod_= @Autowired) /* 2개의 Mapper를 주입 받아야 하기 때문에 자동 주입 대신에 Setter메소드를 이용 */
 	private BoardMapper mapper;
+	
+	@Setter(onMethod_= @Autowired)
+	private BoardAttachMapper attachMapper;
 	
 	@Override
 	public void register(BoardVO board) {
-		log.info("register✨✨✨✨" + board);
+		log.info("등록(register✨✨✨✨)" + board);
 		mapper.insertSelectKey(board);
+		
+		if(board.getAttachList() == null || board.getAttachList().size() <= 0) {
+			return;
+		}
+		
+		board.getAttachList().forEach(attach -> {
+			attach.setBno(board.getBno());
+			attachMapper.insert(attach);
+		});
+		
+	}
+	
+	@Override
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		log.info("첨부파일리스트 해당 게시물 번호(get Attach list by bno)" + bno);
+		return attachMapper.findByBno(bno);
 	}
 	
 	@Override
