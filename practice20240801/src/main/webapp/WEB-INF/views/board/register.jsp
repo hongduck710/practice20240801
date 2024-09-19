@@ -64,7 +64,9 @@ $(document).ready(function(e){
 			// image type
 			if(obj.image){
 				let fileCallPath = encodeURIComponent( obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName );
-				str += "<li><div>";
+				str += "<li data-path='"+ obj.uploadPath +"'";
+				str += "data-uuid='"+ obj.uuid +"' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'";
+				str += "><div>";
 				str += "<span>" + obj.fileName + "</span>";	
 				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='image' class=''><i class='fa fa-times'></i></button><br/>"; // 조금 더 안정적으로 코드를 작성하기 위해서는 \'로 작성하는 것이 좋음.(작은 따옴표 이스케이프 처리)
 				str += "<img src='/display?fileName=" + fileCallPath + "' />";
@@ -72,15 +74,27 @@ $(document).ready(function(e){
 				str += "</li>";	
 
 			} else {
-				let fileCallPath = encodeURI( obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName );
+				let fileCallPath = encodeURIComponent( obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName );
 				let fileLink = fileCallPath.replace(new RegExp(/\\/g), "/");
-				str += "<li><div>";
+
+				str += "<li "; /* 20240919: 태그를 이런 식으로 줄바꿈 하면서 분리할 경우 띄어쓰기에 유의!!!! 예를 들면 <li data=''></il>가 되어야 하는데 <lidata=''></li>이렇게 li와 data가 붙어서 데이터가 전달되지 않는 경우가 생김 */
+				str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "' ><div> ";
+				str += "<span>" + obj.fileName + "</span>";
+				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file'><i class='fa fa-times'></i></button><br/>";
+				str += "<img src='/resources/img/clip-icon.png' alt='📎' />";
+				str += "</div>";
+				str += "</li>";		
+
+				/*
+				str += "<li";
+				str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "' ><div>";
 				str += "<span>" + obj.fileName + "</span>";
 				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file' class=''><i class='fa fa-times'></i></button><br/>";
-				str += "<img src='/resources/img/clip-icon.png' alt='📎' /></a>";
+				str += "<img src='/resources/img/clip-icon.png' alt='📎' />";
 				str += "</div>";
-				str += "</li>";        
-				
+				str += "</li>";
+				*/
+			
 			}
 		}); //$(uploadResultArr) 닫음
 		uploadUL.append(str);
@@ -117,7 +131,21 @@ $(document).ready(function(e){
 	$("button[type='submit']").on("click", function(e){
 		e.preventDefault();
 		console.log("submit clicked");
-	});
+
+		let str = "";
+
+		$(".uploadResult ul li").each(function(i, obj){
+			let jobj = $(obj);
+			console.dir(jobj);
+
+			str += "<input type='hidden' name='attachList["+i+"].fileName' value='" + jobj.data("filename") + "' />";
+			str += "<input type='hidden' name='attachList["+i+"].uuid' value='" + jobj.data("uuid") + "' />";
+			str += "<input type='hidden' name='attachList["+i+"].uploadPath' value='" + jobj.data("path") + "' />";
+			str += "<input type='hidden' name='attachList["+i+"].fileType' value='" + jobj.data("type") + "' />";
+		});
+		formObj.append(str).submit();
+	}); // formObj 닫음
+
 
 	$(".uploadResult").on("click", "button", function(e){
 		console.log("파일 삭제(delete file)");

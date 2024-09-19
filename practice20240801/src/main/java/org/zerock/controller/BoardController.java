@@ -55,14 +55,22 @@ public class BoardController {
 	@PostMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
 		
+		log.info("---------------------------------------");
+		
 		log.info("register: " + board);
 		log.info("글 제목: " + board.getTitle());
 		log.info("글 내용: " + board.getContent());
 		log.info("글쓴이: " + board.getWriter());
 		
-		service.register(board); /* ✨✨✨ 2024년 08월 07일: 요 것을 빼먹어서 글쓰기 기능 구현이 되지 않았음 ✨✨✨ */
+		if(board.getAttachList() != null) {
+			board.getAttachList().forEach(attach -> log.info(attach));
+		}
 		
-		rttr.addFlashAttribute("result", board.getBno());
+		log.info("---------------------------------------");
+		
+		//service.register(board); /* ✨✨✨ 2024년 08월 07일: 요 것을 빼먹어서 글쓰기 기능 구현이 되지 않았음 ✨✨✨ */
+		
+		//rttr.addFlashAttribute("result", board.getBno());
 		
 		return "redirect:/board/list";		
 		/* 'redirect:' 접두어를 사용하면 스프링MVC가 내부적으로 response.sendRedirect()를 처리해줌 */
