@@ -74,7 +74,7 @@ $(document).ready(function(e){
 				str += "</li>";	
 
 			} else {
-				let fileCallPath = encodeURIComponent( obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName );
+				let fileCallPath = encodeURIComponent( obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName ); 
 				let fileLink = fileCallPath.replace(new RegExp(/\\/g), "/");
 
 				str += "<li "; /* 20240919: 태그를 이런 식으로 줄바꿈 하면서 분리할 경우 띄어쓰기에 유의!!!! 예를 들면 <li data=''></il>가 되어야 하는데 <lidata=''></li>이렇게 li와 data가 붙어서 데이터가 전달되지 않는 경우가 생김 */

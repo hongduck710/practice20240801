@@ -113,7 +113,6 @@ public class BoardController {
 		return "redirect:/board/list" + cri.getListLink();
 	}
 	
-	
 	private void deleteFiles(List<BoardAttachVO> attachList) {
 		if(attachList == null || attachList.size() == 0) {
 			return;

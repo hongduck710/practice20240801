@@ -32,10 +32,15 @@
 			<button type="submit" data-oper="list">목록</button>
 		</div>
 	</form>
+	
+	<div class="uploadDiv"><input type="file" name="uploadFile" multiple="multiple" /></div>
+	
+	<div class="bigPictureWrapper"><div class="bigPicture"></div></div>
+	<div class="uploadResult"><ul></ul></div>
 </div>
 
-<script>
-(function ($) {
+<script type="text/javascript">
+$(document).ready(function(){
 	
 	let formObj = $("#board_form");
 	
@@ -66,8 +71,54 @@
 			formObj.append(typeTag);
 		}
 		formObj.submit();
+	}); // button click이벤트 닫음
+		
+});
+</script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	(function(){
+		let bno = '<c:out value = "${board.bno}" />';
+		$.getJSON("/board/getAttachList", {bno : bno}, function(arr) {
+			console.log(arr);
+			let str = "";
+			$(arr).each(function(i, attach){
+				
+				// image type
+				if(attach.fileType) {
+					let fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
+					str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "'><div>";
+					str += "<span>" + attach.fileName + "</span>";
+					str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='image'><i class='fa fa-times'></i></button>";
+					str += "<img src='/display?fileName=" + fileCallPath + "' />";
+					str += "</div>";
+					str += "</li>";
+				} else {
+					let fileCallPath = encodeURIComponent(attach.uploadPath + attach.uuid + "_" + attach.fileName); /* 20240920 - 교재 587페이지에 fileCallPath정의 부분이 누락되어 있어서 register.jsp페이지 참고 후 임의로 작성함 */
+					str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "'><div>";
+					str += "<span>" + attach.fileName + "</span><br />";
+					str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file'><i class='fa fa-times'></i></button>";
+					str += "<img src = '/resources/img/clip-icon.png' alt='📎' />";
+					str += "</div>";
+					str += "</li>";
+				} 
+			}); // $(arr).each 닫음
+			$(".uploadResult ul").html(str);
+		}); // $.getJSON 닫음
+	})(); // 즉시실행함수 닫음
+	/* 20240920 - 즉시실행함수 (function(){})() 맨 뒤에 괄호가 누락이 되어서 첨부파일이 보이지 않았음. 즉시 실행함수: (function(){})(); */
+	$(".uploadResult").on("click", "button", function(e){
+		console.log("파일삭제(delete file)");
+		if(confirm("정말로 삭제하시겠어요?(Are you sure to remove this file?)")){
+			let targetLi = $(this).closest("li");
+			targetLi.remove();
+		}
 	});
-})(jQuery);
+
+});
 
 </script>
 <%@ include file="/WEB-INF/views/include/footer.jspf" %>
