@@ -74,7 +74,7 @@ public class BoardServiceImple implements BoardService{
 			});
 		}
 		
-		return mapper.update(board) == 1;
+		return modifyResult;
 		
 		/* 정상적으로 수정과 삭제가 이루어지면 1이라는 값이 반환되기 때문에
 		==연산자를 이용해서 true/false 처리 할 수 있음 */

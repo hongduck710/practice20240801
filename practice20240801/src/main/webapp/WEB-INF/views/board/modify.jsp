@@ -204,8 +204,35 @@ $(document).ready(function(){
 	$(".uploadResult").on("click", "button", function(e){
 		console.log("파일삭제(delete file)");
 		if(confirm("정말로 삭제하시겠어요?(Are you sure to remove this file?)")){
+
+			/* 20240920 - 임의로 추가 */
+			let targetFile = $(this).data("file");
+			let type = $(this).data("type");	
+			/* 20240920 - 임의로 추가 */
 			let targetLi = $(this).closest("li");
+
+
+			/* 20240920 - 임의로 추가 */
+			$.ajax({
+				url : "/deleteFile",
+				data : {fileName: targetFile, type: type},
+				dataType : "text",
+				type : "POST",
+				success : function(result){
+					alert(result);
+					targetLi.remove();
+				}
+			}); // $.ajax 닫음
+			/* 20240920 - 임의로 추가 */
+/* 게시글 등록 화면에서는 첨부파일을 추가, 삭제하면 업로드 폴더안에 있는 첨부파일이 추가, 삭제가 되나,
+수정 화면에서는 파일을 추가하면 업로드 폴더에 첨부파일이 추가가 되고, 삭제버튼을 누르면 표시된 첨부파일이 삭제되고 수정 버튼을 
+누르면 데이터베이스에서도 첨부파일이 삭제되지만, 폴더안에는 그대로 남아있음.(교재를 따라서 작성한 코드)
+그래서 수정화면에서도 폴더에 있는 첨부파일을 추가, 삭제 가능할 수 있을지 의문이 들어서 register.jsp 자바스크립트 삭제버튼 코드를
+수정화면에서도 적용시키자, 수정화면에서도 첨부파일 추가, 삭제하면 폴더에서도 파일이 추가, 삭제가 됨. 
+폴더 추가 삭제에 있어서 $.ajax가 작용한다는 것을 깨달음. 필요에 따라서 수정화면 첨부파일 폴더에 있는 첨부파일도 같이 추가, 삭제 여부 설정 가능할 것으로 보임.
+			let targetLi = $(this).closest("li");		
 			targetLi.remove();
+*/
 		}
 	});
 
