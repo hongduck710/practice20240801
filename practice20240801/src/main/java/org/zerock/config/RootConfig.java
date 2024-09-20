@@ -1,19 +1,20 @@
 package org.zerock.config;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.tomcat.jdbc.pool.DataSource;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /* JAVA 설정은 학습용으로 작성. 실제로 쓰이지 않음. 불필요시 삭제 가능 */
 @Configuration
 @ComponentScan(basePackages = {"org.zerock.service"})
 @ComponentScan(basePackages = "org.zerock.aop")
+// @ComponentScan(basePackages = "org.zerock.task")
 @EnableAspectJAutoProxy
+@EnableScheduling
+@EnableTransactionManagement
 
 @MapperScan(basePackages = {"org.zerock.mapper"})
 public class RootConfig {
