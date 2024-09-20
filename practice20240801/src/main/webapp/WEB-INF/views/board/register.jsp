@@ -50,6 +50,7 @@ $(document).ready(function(e){
 		
 		if(regex.test(fileName)) {
 			alert("해당 종류의 파일은 업로드 할 수 없습니다.");
+			return false; // 20240920 - 이 부분에 return false;가 누락되어서 추가함
 		}
 		
 		return true;
@@ -69,7 +70,7 @@ $(document).ready(function(e){
 				str += "><div>";
 				str += "<span>" + obj.fileName + "</span>";	
 				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='image' class=''><i class='fa fa-times'></i></button><br/>"; // 조금 더 안정적으로 코드를 작성하기 위해서는 \'로 작성하는 것이 좋음.(작은 따옴표 이스케이프 처리)
-				str += "<img src='/display?fileName=" + fileCallPath + "' />";
+				str += "<img src='/display?fileName=" + fileCallPath + "' alt='첨부 이미지' />";
 				str += "</div>";
 				str += "</li>";	
 

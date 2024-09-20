@@ -57,10 +57,23 @@ public class BoardServiceImple implements BoardService{
 		return mapper.read(bno);
 	}
 
+	@Transactional
 	@Override
 	public boolean modify(BoardVO board) {
 		
 		log.info("modify⛲⛲⛲⛲⛲⛲" + board);
+		
+		attachMapper.deleteAll(board.getBno());
+		
+		boolean modifyResult = mapper.update(board) == 1; 
+		
+		if(modifyResult && board.getAttachList() != null && board.getAttachList().size() > 0) {
+			board.getAttachList().forEach(attach -> {
+				attach.setBno(board.getBno());
+				attachMapper.insert(attach);
+			});
+		}
+		
 		return mapper.update(board) == 1;
 		
 		/* 정상적으로 수정과 삭제가 이루어지면 1이라는 값이 반환되기 때문에
