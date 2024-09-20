@@ -1,5 +1,9 @@
 package org.zerock.controller;
 
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -13,12 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.domain.BoardAttachVO;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.PageDTO;
-import org.zerock.domain.BoardAttachVO;
 import org.zerock.service.BoardService;
-
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -110,11 +113,41 @@ public class BoardController {
 		return "redirect:/board/list" + cri.getListLink();
 	}
 	
+	
+	private void deleteFiles(List<BoardAttachVO> attachList) {
+		if(attachList == null || attachList.size() == 0) {
+			return;
+		}
+		log.info("첨부파일삭제(delete attach files........................)");
+		log.info(attachList);
+		
+		attachList.forEach(attach -> {
+			try {
+				Path file = Paths.get("C:\\zzz\\upload\\" + attach.getUploadPath() + "\\" + attach.getUuid() + "_" + attach.getFileName()); 	/* 20240920 - 업로드 폴더 경로를 "C:\\zzz\\upload\\" 라고 작성해야 하는데 "C:\\zzz\\upload" 라고 작성이 되어서 게시글 삭제할 때 파일 삭제가 정상적으로 이루어지지 않았음. 전부터 여러 번 하던 실수이므로 경로에 \가 누락되었는지 여부 항상 확인하기. */
+				
+				Files.deleteIfExists(file); /* 20240920 -  해당 코드를 작성하지 않았더니 업로드 폴더에 있는 파일들이 삭제가 되지 않음(데이터베이스에서는 삭제가 정상적으로 됨을 확인) */
+				
+				if(Files.probeContentType(file).startsWith("image")) {
+					Path thumbNail = Paths.get("C:\\zzz\\upload\\" + attach.getUploadPath() + "\\s_" + attach.getUuid() + "_" + attach.getFileName());
+					Files.delete(thumbNail);
+				}
+			} catch(Exception e) {
+				log.error("첨부파일 삭제 에러(delete file error): " + e.getMessage());
+			} // try catch 닫음
+		}); // froEach 닫음
+	} // deleteFiles 닫음
+	
 	@PostMapping("/remove")
 	public String remove(@RequestParam("bno") Long bno, /* @ModelAttribute("cri") */ Criteria cri ,RedirectAttributes rttr) {
 		
 		log.info("remove..." + bno);
+		
+		List<BoardAttachVO> attachList = service.getAttachList(bno);
+		
 		if(service.remove(bno)) {
+			// 첨부파일 삭제(delete Attach Files)
+			deleteFiles(attachList);
+			
 			rttr.addFlashAttribute("result", "성🎈공🎈");
 		}
 		
@@ -131,5 +164,7 @@ public class BoardController {
 	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno){
 		return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
 	}
+	
+
 	
 }

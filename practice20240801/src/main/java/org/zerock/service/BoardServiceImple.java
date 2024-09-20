@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.mapper.BoardMapper;
@@ -66,10 +67,12 @@ public class BoardServiceImple implements BoardService{
 		==연산자를 이용해서 true/false 처리 할 수 있음 */
 	}
 
+	@Transactional /* 첨부파일 삭제와 실제 게시물의 삭제가 같이 처리되도록 트랜잭션 하에서 BoardAttachMapper의 deleteAll()을 호출하도록 수정 */ 
 	@Override
 	public boolean remove(Long bno) {
 		
 		log.info("삭🎈제🎈"+ bno);
+		attachMapper.deleteAll(bno);
 		return mapper.delete(bno) == 1;
 		
 	}

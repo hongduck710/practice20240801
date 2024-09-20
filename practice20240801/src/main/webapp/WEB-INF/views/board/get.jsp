@@ -125,11 +125,18 @@ $(document).ready(function(){
 		
 	}); // .uploadResult li 클릭이벤트 닫음
 	
+	$(".bigPictureWrapper").on("click", function(e){
+		$(".bigPicture").animate({width: '0', height: '0'}, 500);
+		setTimeout(function(){
+			$(".bigPictureWrapper").hide();
+		}, 500);
+	}); //.bigPictureWrapper 클릭 이벤트 닫음
+	
 	function showImage(fileCallPath) {
 		alert(fileCallPath);
 		$(".bigPictureWrapper").css("display", "flex").show();
 		$(".bigPicture").html("<img src='/display?fileName=" + fileCallPath + "' />")
-		.animate({width: '100%', height: '100%'}, 1000);
+		.animate({width: '100%', height: '100%'}, 500);
 	}
 	
 });
