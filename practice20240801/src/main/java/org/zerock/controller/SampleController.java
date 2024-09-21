@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.SampleDTO;
 import org.zerock.domain.SampleDTOList;
@@ -35,10 +36,26 @@ import org.zerock.domain.TodoDTO;
 
 import lombok.extern.log4j.Log4j;
 
-@RestController /* 스프링 MVC에서 사용하는 어노테이션을 적용 */
+// @RestController /* 스프링 MVC에서 사용하는 어노테이션을 적용 */ /* 20240921 - @RestController와 @Controller의 중복사용을 피하기 위해 주석처리(authentication 구현을 위해서 @Controller만 필요. 실제로 @RestController를 적용하면 화면에 아무것도 나오지 않는 현상 발생) */
 @RequestMapping("/sample/*")
 @Log4j
+@Controller
 public class SampleController {
+	
+	@GetMapping("/all")
+	public void doAll() {
+		log.info("모든 액세스를 매일 수행한다.(do all can access everyday)");
+	}
+	
+	@GetMapping("/member")
+	public void doMember() {
+		log.info("로그인 한 회원(logined member)");
+	}
+	
+	@GetMapping("/admin")
+	public void doAdmin() {
+		log.info("관리자 전용(admin only)");
+	}
 	
 	@PostMapping("/ticket")
 	public Ticket convert(@RequestBody Ticket ticket) {
