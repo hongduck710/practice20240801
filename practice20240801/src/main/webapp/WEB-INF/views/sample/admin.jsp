@@ -9,6 +9,6 @@
 </head>
 <body>
 	<h2>/sample/admin 페이지</h2>
-
+	<a href="/customLogout">로그아웃(log out)</a>
 </body>
 </html>
