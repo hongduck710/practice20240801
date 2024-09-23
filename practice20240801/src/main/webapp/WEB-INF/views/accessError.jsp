@@ -8,14 +8,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta charset="UTF-8" />
 <title>ACCESS ERROR</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" />
 </head>
 <body>
-	<h1>💫 엑세스 제한 페이지 💫</h1>
-	<h1>🪐 ACCESS DENIED PAGE🪐 </h1>
-	
-	<h2><c:out value="${SPRING_SECURITY_403_EXCEPTION.getMessage()}" /></h2>
-	<h2><c:out value="${msg}" /></h2>
+	<section class="text-center">
+		<h1>💫 엑세스 제한 페이지 💫</h1>
+		<h1>🪐 ACCESS DENIED PAGE🪐 </h1>
+		
+		<h2><c:out value="${SPRING_SECURITY_403_EXCEPTION.getMessage()}" /></h2>
+		<h2><c:out value="${msg}" /></h2>
+	</section>	
 </body>
 </html>

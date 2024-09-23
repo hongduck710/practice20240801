@@ -7,6 +7,8 @@
 .youtube_responsive{position:relative; width:100%; height:0; padding-bottom:56.25%;}
 .youtube_responsive iframe{width:100%; height:100%; position:absolute; top:0; left:0;}
 
+.text-center{text-align:center;}
+
 header{box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);border-bottom:1px solid #eee; position:sticky; padding:20px; top:0; 
 background-color:#fff;display: flex; z-index:1; align-items: center; justify-content: space-between;}
   
