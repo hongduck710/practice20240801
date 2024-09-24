@@ -9,6 +9,9 @@ import org.zerock.mapper.MemberMapper;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
+import org.zerock.domain.MemberVO;
+import org.zerock.security.domain.CustomUser;
+
 @Log4j
 public class CustomUserDetailsService implements UserDetailsService {
 	@Setter(onMethod_ = { @Autowired })
@@ -16,7 +19,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		log.warn("유저네임으로 유저 불러오기(Load User By UserName): " + userName);
-		return null;
+		log.warn("유저네임으로 유저 불러오기(Load User By UserName): " + userName);		
+		
+		// userName means userid
+		MemberVO vo = memberMapper.read(userName);
+		
+		log.warn("member  mapper에 의해 쿼리 됨(quereid by member mapper): " + vo);
+		
+		return vo == null ? null : new CustomUser(vo);
 	}
 }

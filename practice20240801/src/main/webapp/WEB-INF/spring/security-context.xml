@@ -23,8 +23,9 @@
 		<security:access-denied-handler ref="customAccessDenied" />
 		<!-- <security:form-login /> -->
 		<security:form-login login-page="/customLogin" authentication-success-handler-ref="customLoginSuccess" />
-		<security:logout logout-url="/customLogout" invalidate-session="true" />
+		<security:logout logout-url="/customLogout" invalidate-session="true" delete-cookies="remember-me, JSESSIONID" /> <!-- 20240924 - 교재에서는 JSESSION_ID 되어있었으나, 로그아웃을 해도 JSESSIONID가 사라지지 않아 JSESSIONID로 수정해 봄-->
 		<!-- <security:csrf disabled="true" /> -->
+		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800" />
 	</security:http>
 	
 	<security:authentication-manager>

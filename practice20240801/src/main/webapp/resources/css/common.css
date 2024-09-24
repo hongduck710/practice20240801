@@ -30,5 +30,5 @@ footer{border-top: 1px solid #eee;padding:60px 0;}
 button, strong, input, i, span{vertical-align:middle; display:inline-block;} 
 a{text-decoration:none; color:#222;}
 ul, li{list-style:none;}
-button{cursor:pointer;}
+button, select{cursor:pointer;}
 input, textrea{outline:none;}

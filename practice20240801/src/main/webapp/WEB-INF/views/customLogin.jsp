@@ -16,6 +16,7 @@
 	<form method="post" action="/login">
 		<label><input type="text" name="username" value="admin"/></label>
 		<label><input type="password" name="password" value="admin"></label>
+		<label><input type="checkbox" name="remember-me" />로그인 유지(Remember Me)</label>
 		<label><input type="submit" /></label>
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	</form>

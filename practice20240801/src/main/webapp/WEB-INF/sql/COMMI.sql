@@ -41,3 +41,7 @@ CREATE TABLE TBL_MEMBER_AUTH (
     CONSTRAINT FK_MEMBER_AUTH FOREIGN KEY(USERID) 
     REFERENCES TBL_MEMBER(USERID)
 );
+
+		SELECT mem.userid, userpw, username, enabled, regdate, updatedate, auth
+		FROM
+			tbl_member mem LEFT OUTER JOIN tbl_member_auth auth on mem.userid = auth.userid;	
