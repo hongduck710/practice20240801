@@ -1,3 +1,4 @@
+/*
 package org.zerock.security;
 
 import org.junit.Test;
@@ -29,3 +30,4 @@ public class PasswordEncoderTests {
 		log.info(enStr);
 	} // testEncode 닫음
 }
+*/

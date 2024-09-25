@@ -14,6 +14,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -25,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.SampleDTO;
 import org.zerock.domain.SampleDTOList;
@@ -41,6 +42,17 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Controller
 public class SampleController {
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')") /* 20240925 - 이 부분에서 오타가 나서 500 exception 오류 발생(따옴표 잘못 찍음)*/
+	@GetMapping("/annoMember")
+	public void doMember2() {
+		log.info("로그인된 어노테이션 멤버(logined annotation member)");
+	} // doMember2 닫음
+	
+	@Secured({"ROLE_ADMIN"})
+	@GetMapping("/annoAdmin")
+	public void doAdmin2() {
+		log.info("admin어노테이션만(admin annotation only)");
+	}
 	
 	@GetMapping("/all")
 	public void doAll() {
