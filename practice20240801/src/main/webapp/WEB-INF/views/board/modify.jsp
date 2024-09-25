@@ -189,9 +189,10 @@ $(document).ready(function(){
 					str += "</li>";
 				} else {
 					let fileCallPath = encodeURIComponent(attach.uploadPath + attach.uuid + "_" + attach.fileName); /* 20240920 - 교재 587페이지에 fileCallPath정의 부분이 누락되어 있어서 register.jsp페이지 참고 후 임의로 작성함 */
+					let fileLink = fileCallPath.replace(new RegExp(/\\/g), "/"); /* 20240925 - 교재에서는 modify.jsp 파일에서는 fileLint가 없었는데 임의로 추가함(문제될 경우 원상복구) */
 					str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "'><div>";
 					str += "<span>" + attach.fileName + "</span><br />";
-					str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file'><i class='fa fa-times'></i></button>";
+					str += "<button type='button' data-file=\'" + fileLink + "\' data-type='file'><i class='fa fa-times'></i></button>"; /*20240925 - register.jsp도 fileLink로 임의로 바꿔서 modify.jsp도 임의로 바꿈(문제가 될 경우 원상복구) */
 					str += "<img src = '/resources/img/clip-icon.png' alt='📎' />";
 					str += "</div>";
 					str += "</li>";
@@ -230,6 +231,7 @@ $(document).ready(function(){
 그래서 수정화면에서도 폴더에 있는 첨부파일을 추가, 삭제 가능할 수 있을지 의문이 들어서 register.jsp 자바스크립트 삭제버튼 코드를
 수정화면에서도 적용시키자, 수정화면에서도 첨부파일 추가, 삭제하면 폴더에서도 파일이 추가, 삭제가 됨. 
 폴더 추가 삭제에 있어서 $.ajax가 작용한다는 것을 깨달음. 필요에 따라서 수정화면 첨부파일 폴더에 있는 첨부파일도 같이 추가, 삭제 여부 설정 가능할 것으로 보임.
+2024025 - 수정페이지에서 첨부파일 삭제할 때, 이미지파일은 삭제되지만, 일반 파일은 삭제되지 않은 현상이 일시적으로 발생했으나, 다시 확인해보니 이미지파일, 이미지 외 파일 정상적으로 삭제됨을 확인.
 			let targetLi = $(this).closest("li");		
 			targetLi.remove();
 */

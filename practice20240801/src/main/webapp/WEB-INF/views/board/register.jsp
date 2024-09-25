@@ -81,7 +81,7 @@ $(document).ready(function(e){
 				str += "<li "; /* 20240919: 태그를 이런 식으로 줄바꿈 하면서 분리할 경우 띄어쓰기에 유의!!!! 예를 들면 <li data=''></il>가 되어야 하는데 <lidata=''></li>이렇게 li와 data가 붙어서 데이터가 전달되지 않는 경우가 생김 */
 				str += "data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "' ><div> ";
 				str += "<span>" + obj.fileName + "</span>";
-				str += "<button type='button' data-file=\'" + fileCallPath + "\' data-type='file'><i class='fa fa-times'></i></button><br/>";
+				str += "<button type='button' data-file=\'" + fileLink + "\' data-type='file'><i class='fa fa-times'></i></button><br/>"; /* 20240925 - 교재에서 fileLink변수가 사용되지 않아 임의로 fileLink로 바꿈. (교재에서는 data-file이 fileCallPath로 되어있음) (문제가 될 경우 원상복구) */
 				str += "<img src='/resources/img/clip-icon.png' alt='📎' />";
 				str += "</div>";
 				str += "</li>";		
