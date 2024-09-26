@@ -2,11 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%@ include file="/WEB-INF/views/include/header.jspf" %>	
 
 <div class="board modify">
 	<form role="form" action="/board/modify" method="post" id="board_form">
+	
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		
 		<input type="hidden" name="pageNum" value="<c:out value='${cri.pageNum}' /> "/>
 		<input type="hidden" name="amount" value="<c:out value='${cri.amount}' />"/>
@@ -27,8 +30,14 @@
 		 -->
 
 		<div class="buttons">
-			<button type="submit" data-oper="modify">글 수정</button>
-			<button type="submit" data-oper="remove">글 삭제</button>
+		
+			<sec:authentication property="principal" var="pinfo" />
+			<sec:authorize access="isAuthenticated()">
+				<c:if test="${pinfo.username eq board.writer}">	
+					<button type="submit" data-oper="modify">글 수정</button>
+					<button type="submit" data-oper="remove">글 삭제</button>
+				</c:if>
+			</sec:authorize>
 			<button type="submit" data-oper="list">목록</button>
 		</div>
 		<div class="uploadResult"><ul></ul></div>
@@ -144,6 +153,9 @@ $(document).ready(function(){
 		uploadUL.append(str);
 	} // showUploadResult 닫음
 	
+	let csrfHeaderName = "${_csrf.headerName}";
+	let csrfTokenValue = "${_csrf.token}";
+	
 	$("input[type='file']").change(function(e){
 		let formData = new FormData();
 		let inputFile = $("input[name='uploadFile']");
@@ -162,6 +174,9 @@ $(document).ready(function(){
 			contentType : false,
 			data : formData,
 			type : "POST",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
 			dataType : "json",
 			success : function(result){
 				console.log(result);
@@ -219,6 +234,9 @@ $(document).ready(function(){
 				data : {fileName: targetFile, type: type},
 				dataType : "text",
 				type : "POST",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+				}, /* 20240926 - 파일첨부 수정 삭제 권한 설정할 때 토큰값 전달하는 기능. 본래 교재에서는 수정페이지 삭제버튼에는 없었으나, 임의로 추가함 */
 				success : function(result){
 					alert(result);
 					targetLi.remove();

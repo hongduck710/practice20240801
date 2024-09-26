@@ -36,8 +36,8 @@
 				<a href="javascript:void(0);">컬렉션</a>
 		</nav>
 		<ul class="my-menus">
-				<a ref="javascript:void(0);"><i class="fa fa-user"></i></a>
-				<a ref="javascript:void(0);"><i class="fa fa-shopping-bag"></i></a>
+				<a href="/customLogin"><i class="fa fa-user"></i></a>
+				<a href="javascript:void(0);"><i class="fa fa-shopping-bag"></i></a>
 		</ul>
 	</header>
 	<section class="wrap">

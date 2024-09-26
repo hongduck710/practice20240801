@@ -99,6 +99,7 @@ public class BoardController {
 		
 	}
 	
+	@PreAuthorize("principal.username == #board.writer")
 	@PostMapping("/modify")
 	public String modify(BoardVO board, /* @ModelAttribute("cri") */ Criteria cri ,RedirectAttributes rttr) {
 		log.info("modify:" + board);
@@ -138,8 +139,10 @@ public class BoardController {
 		}); // froEach 닫음
 	} // deleteFiles 닫음
 	
+	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/remove")
-	public String remove(@RequestParam("bno") Long bno, /* @ModelAttribute("cri") */ Criteria cri ,RedirectAttributes rttr) {
+	public String remove(@RequestParam("bno") Long bno, /* @ModelAttribute("cri") */ Criteria cri ,
+			RedirectAttributes rttr, String writer) {
 		
 		log.info("remove..." + bno);
 		

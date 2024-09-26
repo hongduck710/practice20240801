@@ -3,8 +3,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 	
-    
 <%@ include file="/WEB-INF/views/include/header.jspf" %>	
 
 <div class="board get">
@@ -24,7 +24,12 @@
 			<!-- name속성은 BoardVO클래스의 변수와 일치시켜준다. -->
 		
 			<div class="buttons">
-				<button data-oper="modify" >수정</button><!-- onclick="location.href='/board/modify?bno=<c:out value="${board.bno}" />'" -->
+				<sec:authentication property="principal"  var="pinfo" />
+				<sec:authorize access="isAuthenticated()">
+					<c:if test="${pinfo.username eq board.writer}">
+						<button data-oper="modify" >수정</button><!-- onclick="location.href='/board/modify?bno=<c:out value="${board.bno}" />'" -->
+					</c:if>	
+				</sec:authorize>
 				<button data-oper="list">목록</button><!--  onclick="location.href='/board/list'" -->
 			</div>
 			
@@ -59,7 +64,9 @@
 			</div><!--.modal  -->
 				<h1>
 					<strong><i class="fa fa-comments fa-fw"></i>댓글</strong>
-					<button id="addReplyBtn">댓글 달기</button>
+					<sec:authorize access="isAuthenticated()">
+						<button id="addReplyBtn">댓글 달기</button>
+					</sec:authorize>
 				</h1>
 				
 				<ul class="chat"><!-- li 하나가 댓글 -->
@@ -278,8 +285,17 @@ $(document).ready(function(){
 	let modalRemoveBtn = $("#modalRemoveBtn");
 	let modalRegisterBtn = $("#modalRegisterBtn");
 	
+	let replyer = null;
+	<sec:authorize access="isAuthenticated()">
+		replyer = "<sec:authentication property='principal.username' />";
+	</sec:authorize>
+	
+	let csrfHeaderName = "${_csrf.headerName}";
+	let csrfTokenValue = "${_csrf.token}";
+	
 	$("#addReplyBtn").on("click", function(e){
 		modal.find("input").val("");
+		modal.find("input[name='replyer']").val(replyer);
 		modalInputReplyDate.closest("label").hide();
 		modal.find("button[id != 'modalCloseBtn']").hide();
 		
@@ -305,6 +321,11 @@ $(document).ready(function(){
 		});
 	});
 	
+	// Ajax spring security header.....
+	$(document).ajaxSend(function(e, xhr, options){
+		xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+	});
+	
 	modalRegisterBtn.on("click", function(e){
 		let reply = {
 			reply : modalInputReply.val(),
@@ -322,7 +343,25 @@ $(document).ready(function(){
 	});
 	
 	modalModBtn.on("click", function(e){
-		let reply = { rno : modal.data("rno"), reply: modalInputReply.val() };
+		let originalReplyer = modalInputReplyer.val();
+		let reply = { 
+				rno : modal.data("rno"), 
+				reply: modalInputReply.val(),
+				replyer: originalReplyer
+		};
+		
+		if(!replyer) {
+			alert("로그인 후 수정이 가능합니다.");
+			// modal.modal("hide");
+			return;
+		}
+		console.log("오리지날 댓글 작성자(Original Replyer): " + originalReplyer);
+		
+		if(replyer != originalReplyer){
+			alert("자신이 작성한 댓글만 수정이 가능합니다.");
+			// modal.modal("hide");
+			return;
+		}
 	
 		replyService.update(reply, function(result){
 			alert(result);
@@ -333,14 +372,31 @@ $(document).ready(function(){
 
 	modalRemoveBtn.on("click", function(e){
 		let rno = modal.data("rno");
-		replyService.remove(rno, function(result){
+		console.log("댓글 번호(RNO): " + rno);
+		console.log("댓글작성자(REPLYER): " + replyer);
+		
+		if(!replyer){
+			alert("로그인 후 삭제가 가능합니다.");
+			// modal.modal("hide");
+			return;
+		}
+		
+		let originalReplyer = modalInputReplyer.val();
+		console.log("오리지날 댓글작성자(Original Replyer): " + originalReplyer); // 댓글의 원래 작성자 
+		
+		if(replyer != originalReplyer){
+			alert("자신이 작성한 댓글만 삭제가 가능합니다.");
+			// modal.modal("hide");
+			return;
+		}
+		
+		replyService.remove(rno, originalReplyer,function(result){
 			alert(result);
 			//modal.modal("hide");
 			showList(pageNum);
 		});
 		
 	});
-	
 	
 	showList(pageNum);  /*20240906 -  이 함수에 임의의 숫자 55를 매개변수로 넣은 채로 실행시키니 댓글 리스트가 바로 나오지 않았음.*/
 
