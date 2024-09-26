@@ -12,6 +12,8 @@
 header{box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);border-bottom:1px solid #eee; position:sticky; padding:20px; top:0; 
 background-color:#fff;display: flex; z-index:1; align-items: center; justify-content: space-between;}
   
+.my-menus{display: flex; gap: 12px;}
+  
  nav a{margin:0 10px;}
   
 section.wrap .main_banner{width:100%; margin:auto;}

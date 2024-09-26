@@ -59,6 +59,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/register") /* 입력페이지를 보여주는 역할만 하기 때문에 별도의 처리가 필요하지 않음 */
+	@PreAuthorize("isAuthenticated()")
 	public void register() {
 		
 	}

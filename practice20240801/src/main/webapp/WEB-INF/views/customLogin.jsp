@@ -28,12 +28,22 @@
 		crossorigin="anonymous">
 	</script>
 	<script>
-	$(document).ready(function(){
+	
 		$(".btn-success").on("click",function(e){
 			e.preventDefault();
 			$("form").submit();
 		});
-	});	
+		
 	</script>
+	<c:if test="${param.logout != null}">
+		<script>
+		$(document).ready(function(){
+			alert("로그아웃하였습니다.");
+		});
+		/* 20240926 - 교재에서는 customLogout.jsp에 로그아웃 표시 alert코드가 
+		기입되어 있었으나 로그아웃 후 alert창 표시가 뜨지않아 customLogtin.jsp파일
+		에 코드를 기입하니 alert창 표시가 정상적으로 표시됨을 확인 */
+		</script>
+	</c:if>
 </body>
 </html>

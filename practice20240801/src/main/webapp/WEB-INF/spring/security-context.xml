@@ -8,8 +8,8 @@
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	
-	<bean id="customAccessDenied" class="org.zerock.security.CustomAccessDeniedHandler"></bean>
-	<bean id="customLoginSuccess" class="org.zerock.security.CustomLoginSuccessHandler"></bean>
+	<!-- <bean id="customAccessDenied" class="org.zerock.security.CustomAccessDeniedHandler"></bean> -->
+	<!-- <bean id="customLoginSuccess" class="org.zerock.security.CustomLoginSuccessHandler"></bean> -->
 	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
 	<bean id="customUserDetailsService" class="org.zerock.security.CustomUserDetailsService"></bean>
 	<!-- <bean id="customPasswordEncoder" class="org.zerock.security.CustomNoOpPasswordEncoder"></bean>  -->
@@ -18,11 +18,14 @@
 		<security:intercept-url pattern="/sample/all" access="permitAll" />
 		<security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')" />
 		<security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')" />
-		
-		<!-- <security:access-denied-handler error-page="/accessError" /> -->
+		<!-- 20240926 - 게시글 등록 /board/regiser 페이지의 경우 로그인을 해야 접근할 수 있게끔 설정하려 했으나 access denied페이지가
+		나와서 다시 교재를 검토하고 나서 /board/regiser페이지에 해당 코드를 기입했더니 로그인을 안한 상태일 경우 로그인 페이지로 가게 됨 -->
+		<security:intercept-url pattern="/board/register" access="hasRole('ROLE_MEMBER')" />
+		<security:intercept-url pattern="/board/register" access="hasRole('ROLE_ADMIN')" />
+		<security:access-denied-handler error-page="/accessError" /> 
 		<security:access-denied-handler ref="customAccessDenied" />
-		<!-- <security:form-login /> -->
-		<security:form-login login-page="/customLogin" authentication-success-handler-ref="customLoginSuccess" />
+		
+		<security:form-login login-page="/customLogin"  />
 		<security:logout logout-url="/customLogout" invalidate-session="true" delete-cookies="remember-me, JSESSION_ID" /> <!-- 20240924 - 교재에서는 JSESSION_ID 되어있었으나, 로그아웃을 해도 JSESSIONID가 사라지지 않아 JSESSIONID로 수정해 봄
 		20240925 - 확인결과 JSESSION_ID로 해도 로그아웃 하면 세션 값이 바뀜 -->
 		<!-- <security:csrf disabled="true" /> -->
