@@ -19,6 +19,8 @@ background-color:#fff;display: flex; z-index:1; align-items: center; justify-con
 section.wrap .main_banner{width:100%; margin:auto;}
 
 section.wrap .main_banner img{ width:100%;}
+section.wrap .guide ol li{list-style:gregorian, font-size: 1.25rem;}
+section.wrap .clock { font-size: 9vw; padding: 140px 0; }
 
 section h1{text-align:center;}
 table{border-collapse: collapse; margin:auto; width:100%;}
@@ -127,4 +129,6 @@ ul.pagination li.active a{color:#fff;}
 @media (max-width:1200px) {
 	section.wrap{padding:20px;}
 	section.wrap p{}
+	section.wrap .clock { font-size: 10vw; }
+	
 }
